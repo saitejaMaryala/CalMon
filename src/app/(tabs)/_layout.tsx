@@ -13,7 +13,7 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: c.sakura,
+        tabBarActiveTintColor: c.primary,
         tabBarInactiveTintColor: c.textFaint,
         tabBarStyle: { backgroundColor: c.card, borderTopColor: c.border, height: 64, paddingTop: 6 },
         tabBarLabelStyle: { fontFamily: fonts.bold, fontSize: 11 },
@@ -32,6 +32,13 @@ export default function TabsLayout() {
         options={{
           title: 'History',
           tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="stats"
+        options={{
+          title: 'Stats',
+          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'stats-chart' : 'stats-chart-outline'} size={22} color={color} />,
         }}
       />
       <Tabs.Screen

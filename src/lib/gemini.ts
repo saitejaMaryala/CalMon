@@ -177,7 +177,7 @@ export async function testApiKey(apiKey: string): Promise<{ ok: boolean; message
     }
     const names: string[] = (body.models ?? []).map((m: any) => String(m.name));
     const hasPro = names.some((n) => n.includes('pro-latest') || n.includes('pro-preview'));
-    return { ok: true, message: hasPro ? 'Key works! Pro models available ✨' : 'Key works!' };
+    return { ok: true, message: hasPro ? 'Key works! Pro models available' : 'Key works!' };
   } catch {
     return { ok: false, message: 'Could not reach Gemini' };
   }

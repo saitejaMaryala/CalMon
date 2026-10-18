@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, Switch, View } from 'react-native';
 import { ApiKeyForm } from '@/components/ApiKeyForm';
-import { LocalAiCard } from '@/components/LocalAiCard';
 import { Mascot } from '@/components/Mascot';
 import { Button, Card, Chip, Input, Row, Screen, Segmented, success, Txt } from '@/components/ui';
 import { exportBackup, importBackup } from '@/lib/backup';
@@ -50,7 +49,6 @@ export default function Settings() {
   return (
     <Screen>
       <View>
-        <Txt variant="jp">せってい</Txt>
         <Txt variant="title">Settings</Txt>
       </View>
 
@@ -60,8 +58,8 @@ export default function Settings() {
           value={s.themePref}
           onChange={s.setThemePref}
           options={[
-            { value: 'light', label: '☀️ Washi' },
-            { value: 'dark', label: '🌙 Yoru' },
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
             { value: 'system', label: 'Auto' },
           ]}
         />
@@ -76,7 +74,7 @@ export default function Settings() {
           <Txt variant="body" soft>
             {profile.age} y · {profile.heightCm} cm · {profile.weightKg} kg · {GOAL_META[profile.goal].label}
           </Txt>
-          <Txt variant="bodyBold" color={c.sakura}>
+          <Txt variant="bodyBold" color={c.primary}>
             {targets.kcal.toLocaleString()} kcal/day{profile.targetOverride != null ? ' (custom)' : ''}
           </Txt>
         </Card>
@@ -153,13 +151,12 @@ export default function Settings() {
           <Switch
             value={s.useFallback}
             onValueChange={s.setUseFallback}
-            trackColor={{ true: c.sakura, false: c.border }}
+            trackColor={{ true: c.primary, false: c.border }}
             thumbColor="#fff"
           />
         </Row>
       </Card>
 
-      <LocalAiCard />
 
       <Card style={{ gap: 12 }}>
         <Txt variant="h2">Backup</Txt>
@@ -173,7 +170,7 @@ export default function Settings() {
       <View style={{ alignItems: 'center', gap: 6, paddingTop: 8 }}>
         <Mascot size={48} mood="wink" />
         <Txt variant="caption" faint>
-          BentoMeter v{Constants.expoConfig?.version ?? '?'} · いただきます!
+          CalMon v{Constants.expoConfig?.version ?? '?'}
         </Txt>
       </View>
     </Screen>

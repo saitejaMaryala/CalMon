@@ -19,10 +19,10 @@ export function RecommendationCard({
   const { c } = useTheme();
   const meta = SLOT_META[rec.nextMeal];
   return (
-    <Card tint={c.matchaSoft} style={{ gap: 12, borderColor: c.matchaSoft }}>
+    <Card tint={c.greenSoft} style={{ gap: 12, borderColor: c.greenSoft }}>
       <Row style={{ justifyContent: 'space-between' }}>
         <View>
-          <Txt variant="caption">Next up · つぎは</Txt>
+          <Txt variant="caption">Next up</Txt>
           <Txt variant="h2">
             {meta.emoji} {meta.label}
             {rec.suggestedTime ? ` around ${rec.suggestedTime}` : ''}

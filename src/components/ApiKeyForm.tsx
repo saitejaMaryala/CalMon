@@ -38,7 +38,7 @@ export function ApiKeyForm({
         secureTextEntry
       />
       {status ? (
-        <Txt variant="caption" color={status.ok ? c.matcha : c.danger}>
+        <Txt variant="caption" color={status.ok ? c.green : c.danger}>
           {status.ok ? '✓ ' : '✗ '}
           {status.message}
         </Txt>
@@ -49,7 +49,7 @@ export function ApiKeyForm({
       </Row>
       <Txt variant="caption" faint>
         Stored only on this device in secure storage. Get a key at{' '}
-        <Txt variant="caption" color={c.sakura} onPress={() => Linking.openURL('https://aistudio.google.com/apikey')}>
+        <Txt variant="caption" color={c.primary} onPress={() => Linking.openURL('https://aistudio.google.com/apikey')}>
           aistudio.google.com/apikey
         </Txt>
       </Txt>

@@ -23,7 +23,7 @@ export function CalorieRing({ consumed, target, size = 168 }: { consumed: number
             cx={size / 2}
             cy={size / 2}
             r={r}
-            stroke={over ? c.yuzu : c.sakura}
+            stroke={over ? c.amber : c.primary}
             strokeWidth={stroke}
             fill="none"
             strokeLinecap="round"
@@ -47,9 +47,6 @@ export function CalorieRing({ consumed, target, size = 168 }: { consumed: number
         {Math.abs(left).toLocaleString()}
       </Txt>
       <Txt variant="caption">{left >= 0 ? 'kcal left' : 'kcal over'}</Txt>
-      <Txt variant="jp" faint>
-        {left >= 0 ? 'のこり' : 'オーバー'}
-      </Txt>
     </View>
   );
 }

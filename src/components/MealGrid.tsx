@@ -17,10 +17,10 @@ const BOX_SLOTS: Record<Box, Slot[]> = {
 };
 
 /**
- * The day as a bento box: one compartment per meal, snacks share a corner.
+ * The day as a 2x2 grid: one tile per meal, snacks share a tile.
  * Empty compartments start logging that meal; full ones open the latest meal.
  */
-export function BentoGrid({
+export function MealGrid({
   meals,
   onOpenMeal,
   onLog,
@@ -31,17 +31,17 @@ export function BentoGrid({
 }) {
   const { c } = useTheme();
   const tints: Record<Box, string> = {
-    breakfast: c.yuzuSoft,
-    lunch: c.sakuraSoft,
-    dinner: c.soraSoft,
-    snacks: c.matchaSoft,
+    breakfast: c.amberSoft,
+    lunch: c.primarySoft,
+    dinner: c.blueSoft,
+    snacks: c.greenSoft,
   };
 
   const renderBox = (box: Box, style: object) => {
     const slots = BOX_SLOTS[box];
     const inBox = meals.filter((m) => slots.includes(m.slot));
     const kcal = inBox.reduce((s, m) => s + itemsTotals(m.items).kcal, 0);
-    const meta = box === 'snacks' ? { label: 'Snacks', jp: 'おやつ', emoji: '🍡' } : SLOT_META[box];
+    const meta = box === 'snacks' ? { label: 'Snacks', emoji: '🍎' } : SLOT_META[box];
     const latest = inBox[inBox.length - 1];
     const photo = [...inBox].reverse().find((m) => m.photoUri)?.photoUri;
 
@@ -63,10 +63,7 @@ export function BentoGrid({
         {photo ? <View style={[StyleSheet.absoluteFill, { backgroundColor: c.bg, opacity: 0.55 }]} /> : null}
         <View style={styles.boxInner}>
           <Txt style={{ fontSize: 22 }}>{meta.emoji}</Txt>
-          <View>
-            <Txt variant="bodyBold">{meta.label}</Txt>
-            <Txt variant="jp">{meta.jp}</Txt>
-          </View>
+          <Txt variant="bodyBold">{meta.label}</Txt>
           <View style={{ flex: 1 }} />
           {inBox.length ? (
             <Txt variant="number" style={{ fontSize: 18 }}>
@@ -84,13 +81,13 @@ export function BentoGrid({
   };
 
   return (
-    <View style={[styles.bento, { borderColor: c.border, backgroundColor: c.card }]}>
+    <View style={styles.grid}>
       <View style={styles.row}>
         {renderBox('breakfast', { flex: 1 })}
-        {renderBox('lunch', { flex: 1.35 })}
+        {renderBox('lunch', { flex: 1 })}
       </View>
       <View style={styles.row}>
-        {renderBox('dinner', { flex: 1.35 })}
+        {renderBox('dinner', { flex: 1 })}
         {renderBox('snacks', { flex: 1 })}
       </View>
     </View>
@@ -98,8 +95,8 @@ export function BentoGrid({
 }
 
 const styles = StyleSheet.create({
-  bento: { borderRadius: radius.lg + 4, borderWidth: 1, padding: 8, gap: 8 },
-  row: { flexDirection: 'row', gap: 8 },
+  grid: { gap: 10 },
+  row: { flexDirection: 'row', gap: 10 },
   box: { height: 118, borderRadius: radius.md, borderWidth: 1, overflow: 'hidden' },
   boxInner: { flex: 1, padding: 12, gap: 2 },
   photo: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },

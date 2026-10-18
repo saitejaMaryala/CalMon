@@ -6,9 +6,9 @@ import { Txt } from './ui';
 export function MacroBars({ totals, targets }: { totals: Macros; targets: Targets }) {
   const { c } = useTheme();
   const rows = [
-    { label: 'Protein', jp: 'たんぱく質', value: totals.proteinG, target: targets.proteinG, color: c.matcha, track: c.matchaSoft },
-    { label: 'Carbs', jp: '炭水化物', value: totals.carbsG, target: targets.carbsG, color: c.yuzu, track: c.yuzuSoft },
-    { label: 'Fat', jp: '脂質', value: totals.fatG, target: targets.fatG, color: c.sora, track: c.soraSoft },
+    { label: 'Protein', value: totals.proteinG, target: targets.proteinG, color: c.green, track: c.greenSoft },
+    { label: 'Carbs', value: totals.carbsG, target: targets.carbsG, color: c.amber, track: c.amberSoft },
+    { label: 'Fat', value: totals.fatG, target: targets.fatG, color: c.blue, track: c.blueSoft },
   ];
   return (
     <View style={{ gap: 12, flex: 1 }}>

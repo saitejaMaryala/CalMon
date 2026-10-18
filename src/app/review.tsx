@@ -12,7 +12,6 @@ import { dayKey, newId } from '@/lib/dates';
 import { deleteMeal, saveMeal } from '@/lib/db';
 import { refreshRecommendation } from '@/lib/gemini';
 import { deletePhoto } from '@/lib/image';
-import { LOCAL_MODEL_LABEL } from '@/lib/local/models';
 import { isStale, itemsTotals, round } from '@/lib/nutrition';
 import type { FoodItem, Meal } from '@/lib/types';
 import { useAppStore } from '@/store/useAppStore';
@@ -157,10 +156,10 @@ export default function Review() {
         onWhen={(d) => updateDraft({ eatenAt: d.toISOString(), date: dayKey(d) })}
       />
 
-      <Card tint={c.sakuraSoft} style={{ borderColor: c.sakuraSoft }}>
+      <Card tint={c.primarySoft} style={{ borderColor: c.primarySoft }}>
         <Row style={{ justifyContent: 'space-between' }}>
           <View>
-            <Txt variant="caption">This meal · ごうけい</Txt>
+            <Txt variant="caption">This meal</Txt>
             <Txt variant="display">
               {Math.round(totals.kcal)}
               <Txt variant="h2"> kcal</Txt>
@@ -178,7 +177,7 @@ export default function Review() {
         <Row style={{ justifyContent: 'space-between' }}>
           <View>
             <Txt variant="h2">Items</Txt>
-            <Txt variant="jp">なかみ · tap numbers to edit</Txt>
+            <Txt variant="caption">Tap numbers to edit</Txt>
           </View>
           <Button
             small
@@ -216,13 +215,11 @@ export default function Review() {
 
       {draft.modelUsed ? (
         <Txt variant="caption" faint style={{ textAlign: 'center' }}>
-          {draft.modelUsed === LOCAL_MODEL_LABEL
-            ? 'Foods spotted on this phone · calories from the Indian food table (INDB) · tap to adjust'
-            : `Estimated by ${draft.modelUsed} · values are approximate`}
+          Estimated by {draft.modelUsed} · values are approximate
         </Txt>
       ) : null}
 
-      <Button title={editing ? 'Save changes' : 'Save meal 🍱'} onPress={save} loading={saving} />
+      <Button title={editing ? 'Save changes' : 'Save meal'} onPress={save} loading={saving} />
       {editing ? <Button title="Delete meal" kind="danger" onPress={remove} /> : null}
     </Screen>
   );

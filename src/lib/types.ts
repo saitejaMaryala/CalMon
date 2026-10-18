@@ -75,4 +75,11 @@ export interface Meal {
   updatedAt: string;
 }
 
+/** One body-weight reading per calendar day. */
+export interface WeightEntry {
+  /** Local calendar day, YYYY-MM-DD. */
+  date: string;
+  kg: number;
+}
+
 export type ThemePref = 'system' | 'light' | 'dark';

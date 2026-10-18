@@ -8,10 +8,10 @@ export const ACTIVITY_META: Record<Activity, { label: string; hint: string; fact
   very_active: { label: 'Very active', hint: 'Athlete or physical job', factor: 1.9 },
 };
 
-export const GOAL_META: Record<Goal, { label: string; jp: string; delta: number }> = {
-  lose: { label: 'Lose weight', jp: 'へらす', delta: -500 },
-  maintain: { label: 'Maintain', jp: 'キープ', delta: 0 },
-  gain: { label: 'Gain', jp: 'ふやす', delta: 300 },
+export const GOAL_META: Record<Goal, { label: string; delta: number }> = {
+  lose: { label: 'Lose weight', delta: -500 },
+  maintain: { label: 'Maintain', delta: 0 },
+  gain: { label: 'Gain', delta: 300 },
 };
 
 const MIN_TARGET = 1200;

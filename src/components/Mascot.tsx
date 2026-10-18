@@ -1,14 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Easing } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Ellipse, G, Path } from 'react-native-svg';
 import { useTheme } from '@/theme/ThemeProvider';
 
 export type Mood = 'happy' | 'yum' | 'dizzy' | 'sleepy' | 'wink';
 
-/** Onigiri-kun: a tiny rice-ball mascot whose face follows your day. */
+/** Mon: a tiny calorie monster whose face follows your day. */
 export function Mascot({ size = 64, mood = 'happy', bounce = false }: { size?: number; mood?: Mood; bounce?: boolean }) {
-  const { c, isDark } = useTheme();
-  const y = useRef(new Animated.Value(0)).current;
+  const { c } = useTheme();
+  const [y] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     if (!bounce) return;
@@ -22,25 +22,27 @@ export function Mascot({ size = 64, mood = 'happy', bounce = false }: { size?: n
     return () => loop.stop();
   }, [bounce, size, y]);
 
-  const ink = '#3A3335';
-  const rice = isDark ? '#FBF6EF' : '#FFFFFF';
+  const ink = '#1B1B3A';
+  const cheek = '#FF8FB1';
 
   return (
     <Animated.View style={{ transform: [{ translateY: y }] }}>
       <Svg width={size} height={size} viewBox="0 0 100 100">
         <Ellipse cx="50" cy="96" rx="30" ry="3.5" fill={c.shadow} />
+        <Path d="M30 27 L25 9 L41 21 Z" fill={c.primary} stroke={ink} strokeWidth={2.5} strokeLinejoin="round" />
+        <Path d="M70 27 L75 9 L59 21 Z" fill={c.primary} stroke={ink} strokeWidth={2.5} strokeLinejoin="round" />
+        <Ellipse cx="36" cy="91" rx="9" ry="4.5" fill={c.primary} stroke={ink} strokeWidth={2.5} />
+        <Ellipse cx="64" cy="91" rx="9" ry="4.5" fill={c.primary} stroke={ink} strokeWidth={2.5} />
         <Path
-          d="M50 8 C56 8 60 12 64 18 L90 70 C95 80 90 92 78 92 L22 92 C10 92 5 80 10 70 L36 18 C40 12 44 8 50 8 Z"
-          fill={rice}
+          d="M50 17 C74 17 86 34 86 57 C86 79 72 90 50 90 C28 90 14 79 14 57 C14 34 26 17 50 17 Z"
+          fill={c.primary}
           stroke={ink}
           strokeWidth={2.5}
-          strokeLinejoin="round"
         />
-        <Rect x="35" y="66" width="30" height="26" rx="3" fill="#2F3B35" />
-        <Rect x="35" y="66" width="30" height="3" rx="1.5" fill="#4A5A50" />
-        <Ellipse cx="32" cy="57" rx="5" ry="3" fill={c.sakura} opacity={0.55} />
-        <Ellipse cx="68" cy="57" rx="5" ry="3" fill={c.sakura} opacity={0.55} />
-        <Face mood={mood} ink={ink} pink={c.sakura} />
+        <Ellipse cx="50" cy="77" rx="19" ry="10" fill="#FFFFFF" opacity={0.3} />
+        <Ellipse cx="31" cy="58" rx="5" ry="3" fill={cheek} opacity={0.7} />
+        <Ellipse cx="69" cy="58" rx="5" ry="3" fill={cheek} opacity={0.7} />
+        <Face mood={mood} ink={ink} pink={cheek} />
       </Svg>
     </Animated.View>
   );
@@ -55,6 +57,7 @@ function Face({ mood, ink, pink }: { mood: Mood; ink: string; pink: string }) {
           <Path d="M36 50 Q40 45 44 50" {...stroke} />
           <Path d="M56 50 Q60 45 64 50" {...stroke} />
           <Path d="M46 56 Q50 60 54 56" {...stroke} />
+          <Path d="M46.5 57.2 L48 61 L49.6 58.2 Z" fill="#FFFFFF" stroke={ink} strokeWidth={1} strokeLinejoin="round" />
         </G>
       );
     case 'yum':
@@ -90,6 +93,7 @@ function Face({ mood, ink, pink }: { mood: Mood; ink: string; pink: string }) {
           <Path d="M36 50 Q40 45 44 50" {...stroke} />
           <Circle cx="60" cy="49" r="3" fill={ink} />
           <Path d="M46 56 Q50 60 54 56" {...stroke} />
+          <Path d="M46.5 57.2 L48 61 L49.6 58.2 Z" fill="#FFFFFF" stroke={ink} strokeWidth={1} strokeLinejoin="round" />
         </G>
       );
   }

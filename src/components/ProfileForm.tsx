@@ -51,7 +51,7 @@ export function ProfileForm({
   return (
     <View style={{ gap: 16 }}>
       <Field label="Nickname (optional)">
-        <Input value={name} onChangeText={setName} placeholder="e.g. Mochi" />
+        <Input value={name} onChangeText={setName} placeholder="e.g. Alex" />
       </Field>
       <Row gap={12}>
         <Field label="Age">
@@ -89,8 +89,8 @@ export function ProfileForm({
                 style={{
                   borderRadius: radius.md,
                   borderWidth: 1.5,
-                  borderColor: active ? c.sakura : c.border,
-                  backgroundColor: active ? c.sakuraSoft : c.card,
+                  borderColor: active ? c.primary : c.border,
+                  backgroundColor: active ? c.primarySoft : c.card,
                   paddingVertical: 10,
                   paddingHorizontal: 14,
                 }}
@@ -110,8 +110,8 @@ export function ProfileForm({
         />
       </Field>
 
-      <Card tint={c.sakuraSoft} style={{ gap: 8, borderColor: c.sakuraSoft }}>
-        <Txt variant="caption">Your daily target · もくひょう</Txt>
+      <Card tint={c.primarySoft} style={{ gap: 8, borderColor: c.primarySoft }}>
+        <Txt variant="caption">Your daily target</Txt>
         {targets && profile ? (
           <>
             <Txt variant="display">
@@ -125,7 +125,7 @@ export function ProfileForm({
           </>
         ) : (
           <Txt variant="body" soft>
-            Fill in age, height and weight to see it ✨
+            Fill in age, height and weight to see it
           </Txt>
         )}
         <Row style={{ justifyContent: 'space-between', marginTop: 4 }}>
@@ -133,7 +133,7 @@ export function ProfileForm({
           <Switch
             value={useOverride}
             onValueChange={setUseOverride}
-            trackColor={{ true: c.sakura, false: c.border }}
+            trackColor={{ true: c.primary, false: c.border }}
             thumbColor="#fff"
           />
         </Row>

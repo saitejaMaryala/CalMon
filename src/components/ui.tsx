@@ -30,17 +30,16 @@ export function success() {
 
 // ---------- text ----------
 
-type Variant = 'display' | 'title' | 'h2' | 'body' | 'bodyBold' | 'caption' | 'jp' | 'number';
+type Variant = 'display' | 'title' | 'h2' | 'body' | 'bodyBold' | 'caption' | 'number';
 
 const variantStyle: Record<Variant, TextStyle> = {
-  display: { fontFamily: fonts.heavy, fontSize: 34, lineHeight: 42 },
-  title: { fontFamily: fonts.heavy, fontSize: 24, lineHeight: 32 },
+  display: { fontFamily: fonts.heavy, fontSize: 34, lineHeight: 42, letterSpacing: -0.8 },
+  title: { fontFamily: fonts.heavy, fontSize: 26, lineHeight: 32, letterSpacing: -0.5 },
   h2: { fontFamily: fonts.bold, fontSize: 17, lineHeight: 24 },
   body: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 22 },
   bodyBold: { fontFamily: fonts.bold, fontSize: 15, lineHeight: 22 },
   caption: { fontFamily: fonts.medium, fontSize: 12, lineHeight: 17 },
-  jp: { fontFamily: fonts.medium, fontSize: 11, lineHeight: 15, letterSpacing: 1 },
-  number: { fontFamily: fonts.heavy, fontSize: 20, lineHeight: 26 },
+  number: { fontFamily: fonts.heavy, fontSize: 20, lineHeight: 26, letterSpacing: -0.3 },
 };
 
 export function Txt({
@@ -52,16 +51,16 @@ export function Txt({
   ...rest
 }: TextProps & { variant?: Variant; soft?: boolean; faint?: boolean; color?: string }) {
   const { c } = useTheme();
-  const tint = color ?? (faint ? c.textFaint : soft || variant === 'jp' || variant === 'caption' ? c.textSoft : c.text);
+  const tint = color ?? (faint ? c.textFaint : soft || variant === 'caption' ? c.textSoft : c.text);
   return <Text {...rest} style={[variantStyle[variant], { color: tint }, style]} />;
 }
 
-/** English label with a small Japanese subtitle under it. */
-export function Label({ en, jp, size = 'h2' }: { en: string; jp?: string; size?: 'h2' | 'title' }) {
+/** Section heading with an optional caption under it. */
+export function Label({ text, sub, size = 'h2' }: { text: string; sub?: string; size?: 'h2' | 'title' }) {
   return (
     <View>
-      <Txt variant={size}>{en}</Txt>
-      {jp ? <Txt variant="jp">{jp}</Txt> : null}
+      <Txt variant={size}>{text}</Txt>
+      {sub ? <Txt variant="caption">{sub}</Txt> : null}
     </View>
   );
 }
@@ -142,7 +141,7 @@ export function Button({
   small?: boolean;
 }) {
   const { c } = useTheme();
-  const bg = { primary: c.sakura, soft: c.sakuraSoft, ghost: 'transparent', danger: 'transparent' }[kind];
+  const bg = { primary: c.primary, soft: c.primarySoft, ghost: 'transparent', danger: 'transparent' }[kind];
   const fg = { primary: c.onAccent, soft: c.text, ghost: c.textSoft, danger: c.danger }[kind];
   return (
     <Pressable
@@ -179,7 +178,7 @@ export function Chip({
   color?: string;
 }) {
   const { c } = useTheme();
-  const accent = color ?? c.sakura;
+  const accent = color ?? c.primary;
   return (
     <Pressable
       onPress={() => {
@@ -270,10 +269,10 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: space.lg,
     borderWidth: 1,
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 1,
-    shadowRadius: 16,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 1,
   },
   button: {
     flexDirection: 'row',
@@ -282,17 +281,17 @@ const styles = StyleSheet.create({
     gap: space.sm,
     minHeight: 52,
     paddingHorizontal: space.xl,
-    borderRadius: radius.pill,
+    borderRadius: radius.md,
   },
-  buttonSmall: { minHeight: 38, paddingHorizontal: space.lg },
+  buttonSmall: { minHeight: 38, paddingHorizontal: space.lg, borderRadius: radius.sm },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: radius.pill,
     borderWidth: 1.5,
   },
-  segmented: { flexDirection: 'row', borderRadius: radius.pill, padding: 4 },
-  segment: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: radius.pill },
+  segmented: { flexDirection: 'row', borderRadius: radius.md, padding: 4 },
+  segment: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: radius.sm },
   segmentActive: { shadowOffset: { width: 0, height: 2 }, shadowOpacity: 1, shadowRadius: 6, elevation: 1 },
   input: {
     borderRadius: radius.md,

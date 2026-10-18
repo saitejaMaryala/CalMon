@@ -85,7 +85,7 @@ export default function MealDetail() {
 
       <View>
         <Txt variant="caption">
-          {formatDayLabel(meal.date)} · {formatTime(eaten)} · {meta.jp}
+          {formatDayLabel(meal.date)} · {formatTime(eaten)}
         </Txt>
         <Txt variant="title">{meal.dishSummary || 'Meal'}</Txt>
       </View>
@@ -121,8 +121,8 @@ export default function MealDetail() {
       </Card>
 
       {meal.note ? (
-        <Card tint={c.yuzuSoft} style={{ borderColor: c.yuzuSoft }}>
-          <Txt variant="caption">Note · メモ</Txt>
+        <Card tint={c.amberSoft} style={{ borderColor: c.amberSoft }}>
+          <Txt variant="caption">Note</Txt>
           <Txt variant="body">{meal.note}</Txt>
         </Card>
       ) : null}

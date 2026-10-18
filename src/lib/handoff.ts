@@ -8,7 +8,7 @@ import { AnalysisError, describeContext, parseAnalysis, SYSTEM_PROMPT, type Anal
 export const HANDOFF_MODEL_LABEL = 'chat app';
 
 /** First line of every prompt; also used to tell our own prompt apart from a pasted reply. */
-const PROMPT_MARKER = 'BENTOMETER v1';
+const PROMPT_MARKER = 'CALMON v1';
 
 const EXAMPLE_REPLY = `{
   "dish_summary": "Dal rice with roti",
@@ -23,7 +23,7 @@ const EXAMPLE_REPLY = `{
       { "name": "Roasted chana", "kcal": 150, "why": "Protein and fibre" },
       { "name": "Fruit bowl", "kcal": 120, "why": "Light and fresh" }
     ],
-    "tip": "Nice balanced lunch! 🍱"
+    "tip": "Nice balanced lunch!"
   }
 }`;
 

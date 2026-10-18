@@ -112,8 +112,8 @@ export default function Handoff() {
 
   return (
     <Screen edges={[]}>
-      <Card tint={c.soraSoft} style={{ borderColor: c.soraSoft, gap: 6 }}>
-        <Txt variant="bodyBold">Gemini is busy, so let’s ask your chat app 💬</Txt>
+      <Card tint={c.blueSoft} style={{ borderColor: c.blueSoft, gap: 6 }}>
+        <Txt variant="bodyBold">Gemini is busy, so let’s ask your chat app</Txt>
         <Txt variant="caption">
           {hasPhoto
             ? 'The prompt goes to your clipboard and the photo opens the share sheet. Pick Gemini or ChatGPT, paste the prompt next to the photo and send.'
@@ -122,7 +122,7 @@ export default function Handoff() {
       </Card>
 
       <Card style={{ gap: 12 }}>
-        <Label en="1 · Send it" jp="おくる" />
+        <Label text="1 · Send it" />
         {hasPhoto ? (
           <Image source={{ uri: draft.photoUri! }} style={{ width: '100%', height: 160, borderRadius: radius.md }} contentFit="cover" />
         ) : (
@@ -138,14 +138,14 @@ export default function Handoff() {
         />
         {copied ? (
           <Row style={{ justifyContent: 'center' }}>
-            <Ionicons name="checkmark-circle" size={16} color={c.matcha} />
+            <Ionicons name="checkmark-circle" size={16} color={c.green} />
             <Txt variant="caption">Prompt copied — paste it in the chat</Txt>
           </Row>
         ) : null}
       </Card>
 
       <Card style={{ gap: 12 }}>
-        <Label en="2 · Paste the reply" jp="はりつけ" />
+        <Label text="2 · Paste the reply" />
         <Txt variant="caption">Copy the whole answer (the JSON block) and paste it here.</Txt>
         <Input
           value={reply}
@@ -158,7 +158,7 @@ export default function Handoff() {
       </Card>
 
       {error ? (
-        <Card tint={c.sakuraSoft} style={{ gap: 10, alignItems: 'center', borderColor: c.sakuraSoft }}>
+        <Card tint={c.primarySoft} style={{ gap: 10, alignItems: 'center', borderColor: c.primarySoft }}>
           <Mascot size={56} mood="dizzy" />
           <Txt variant="bodyBold" style={{ textAlign: 'center' }}>
             {error}

@@ -66,14 +66,13 @@ export default function History() {
     if (kcal <= 0) return 'transparent';
     const r = kcal / target;
     if (r > 1.1) return c.danger;
-    if (r >= 0.85) return c.matcha;
-    return c.yuzu;
+    if (r >= 0.85) return c.green;
+    return c.amber;
   };
 
   return (
     <Screen>
       <View>
-        <Txt variant="jp">きろく</Txt>
         <Txt variant="title">History</Txt>
       </View>
 
@@ -84,7 +83,7 @@ export default function History() {
         </Row>
         <View style={styles.chart}>
           <View
-            style={[styles.targetLine, { bottom: LABEL_H + (target / maxBar) * BAR_H, borderColor: c.sakura }]}
+            style={[styles.targetLine, { bottom: LABEL_H + (target / maxBar) * BAR_H, borderColor: c.primary }]}
             pointerEvents="none"
           />
           {week.map((d) => (
@@ -95,13 +94,13 @@ export default function History() {
                     width: 18,
                     height: `${Math.max(2, (d.kcal / maxBar) * 100)}%`,
                     borderRadius: 9,
-                    backgroundColor: d.kcal > target * 1.1 ? c.danger : d.kcal > 0 ? c.sakura : c.ringTrack,
+                    backgroundColor: d.kcal > target * 1.1 ? c.danger : d.kcal > 0 ? c.primary : c.ringTrack,
                   }}
                 />
               </View>
               <Txt
                 variant="caption"
-                style={[{ height: LABEL_H, paddingTop: 6 }, d.key === today && { color: c.sakura, fontFamily: fonts.heavy }]}
+                style={[{ height: LABEL_H, paddingTop: 6 }, d.key === today && { color: c.primary, fontFamily: fonts.heavy }]}
               >
                 {WEEKDAYS[(parseDayKey(d.key).getDay() + 6) % 7]}
               </Txt>
@@ -109,7 +108,7 @@ export default function History() {
           ))}
         </View>
         <Txt variant="caption" faint>
-          Pink line = your {target.toLocaleString()} kcal target
+          Dashed line = your {target.toLocaleString()} kcal target
         </Txt>
       </Card>
 
@@ -140,7 +139,7 @@ export default function History() {
                 <View
                   style={[
                     styles.dayCircle,
-                    key === today && { borderColor: c.sakura, borderWidth: 2 },
+                    key === today && { borderColor: c.primary, borderWidth: 2 },
                     kcal > 0 && { backgroundColor: c.bgSoft },
                   ]}
                 >
@@ -154,8 +153,8 @@ export default function History() {
           })}
         </View>
         <Row gap={14} style={{ justifyContent: 'center' }}>
-          <Legend color={c.yuzu} label="under" />
-          <Legend color={c.matcha} label="on target" />
+          <Legend color={c.amber} label="under" />
+          <Legend color={c.green} label="on target" />
           <Legend color={c.danger} label="over" />
         </Row>
       </Card>

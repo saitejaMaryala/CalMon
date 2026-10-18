@@ -3,7 +3,7 @@ import { round, toPerUnit } from './nutrition';
 import { newId } from './dates';
 import type { FoodItem, Macros, Profile, Recommendation, Slot, Targets } from './types';
 
-/** Prompt, schema and parsing shared by every analysis engine (Gemini API, chat-app handoff, on-device). */
+/** Prompt, schema and parsing shared by every analysis engine (Gemini API and chat-app handoff). */
 export interface DayContext {
   now: Date;
   slot: Slot;
@@ -88,7 +88,7 @@ export const analysisSchema = {
 
 // ---------- prompts ----------
 
-export const SYSTEM_PROMPT = `You are BentoMeter, a careful nutrition estimator and a warm, encouraging meal coach.
+export const SYSTEM_PROMPT = `You are CalMon, a careful nutrition estimator and a warm, encouraging meal coach.
 
 Food analysis rules:
 - List every distinct food or drink item separately (e.g. rice, curry, side salad, drink). Do not merge separate items.

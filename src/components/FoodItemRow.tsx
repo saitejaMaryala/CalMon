@@ -90,7 +90,7 @@ export function FoodItemRow({
       {item.portion || lowConfidence ? (
         <Txt variant="caption" faint>
           {item.portion}
-          {lowConfidence ? '  · not so sure 🤔' : ''}
+          {lowConfidence ? '  · low confidence' : ''}
         </Txt>
       ) : null}
 
@@ -111,7 +111,7 @@ export function FoodItemRow({
               tap();
               setQty(item.quantity + step);
             }}
-            style={[styles.stepBtn, { backgroundColor: c.sakura }]}
+            style={[styles.stepBtn, { backgroundColor: c.primary }]}
           >
             <Ionicons name="add" size={16} color={c.onAccent} />
           </Pressable>

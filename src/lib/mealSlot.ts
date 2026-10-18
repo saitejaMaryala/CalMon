@@ -1,11 +1,11 @@
 import type { Slot } from './types';
 
-export const SLOT_META: Record<Slot, { label: string; jp: string; emoji: string; order: number }> = {
-  breakfast: { label: 'Breakfast', jp: '朝ごはん', emoji: '🍳', order: 0 },
-  lunch: { label: 'Lunch', jp: '昼ごはん', emoji: '🍱', order: 1 },
-  snack: { label: 'Snack', jp: 'おやつ', emoji: '🍡', order: 2 },
-  dinner: { label: 'Dinner', jp: '晩ごはん', emoji: '🍜', order: 3 },
-  latenight: { label: 'Late snack', jp: '夜食', emoji: '🌙', order: 4 },
+export const SLOT_META: Record<Slot, { label: string; emoji: string; order: number }> = {
+  breakfast: { label: 'Breakfast', emoji: '🍳', order: 0 },
+  lunch: { label: 'Lunch', emoji: '🥗', order: 1 },
+  snack: { label: 'Snack', emoji: '🍎', order: 2 },
+  dinner: { label: 'Dinner', emoji: '🍽️', order: 3 },
+  latenight: { label: 'Late snack', emoji: '🌙', order: 4 },
 };
 
 export const SLOTS: Slot[] = ['breakfast', 'lunch', 'snack', 'dinner', 'latenight'];
@@ -47,9 +47,9 @@ export function defaultTimeForSlot(slot: Slot): { h: number; m: number } {
   }
 }
 
-export function greetingFor(date: Date): { en: string; jp: string } {
+export function greetingFor(date: Date): string {
   const h = date.getHours();
-  if (h >= 5 && h < 11) return { en: 'Good morning', jp: 'おはよう' };
-  if (h >= 11 && h < 18) return { en: 'Good afternoon', jp: 'こんにちは' };
-  return { en: 'Good evening', jp: 'こんばんは' };
+  if (h >= 5 && h < 11) return 'Good morning';
+  if (h >= 11 && h < 18) return 'Good afternoon';
+  return 'Good evening';
 }

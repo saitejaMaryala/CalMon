@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
-import type { FoodItem, Meal, Profile, Recommendation, Slot } from './types';
+import type { FoodItem, Meal, Profile, Recommendation, Slot, WeightEntry } from './types';
 
-const DATABASE_VERSION = 1;
+const DATABASE_VERSION = 2;
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
@@ -70,6 +70,16 @@ CREATE TABLE IF NOT EXISTS food_items (
 CREATE INDEX IF NOT EXISTS food_items_meal ON food_items (meal_id, position);
 `);
     version = 1;
+  }
+  if (version === 1) {
+    await db.execAsync(`
+CREATE TABLE IF NOT EXISTS weights (
+  date TEXT PRIMARY KEY NOT NULL,
+  kg REAL NOT NULL,
+  updated_at TEXT NOT NULL
+);
+`);
+    version = 2;
   }
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
@@ -279,4 +289,46 @@ export async function getDailyKcal(from: string, to: string): Promise<Record<str
     from, to,
   );
   return Object.fromEntries(rows.map((r) => [r.date, r.kcal]));
+}
+
+/** Total kcal per day and meal slot between two day keys (inclusive). */
+export async function getDailyKcalBySlot(from: string, to: string): Promise<{ date: string; slot: Slot; kcal: number }[]> {
+  const db = await getDb();
+  return db.getAllAsync<{ date: string; slot: Slot; kcal: number }>(
+    `SELECT m.date AS date, m.slot AS slot, COALESCE(SUM(f.kcal_per_unit * f.quantity), 0) AS kcal
+     FROM meals m LEFT JOIN food_items f ON f.meal_id = m.id
+     WHERE m.date BETWEEN ? AND ?
+     GROUP BY m.date, m.slot`,
+    from, to,
+  );
+}
+
+// ---------- weights ----------
+
+export async function getWeights(from: string, to: string): Promise<WeightEntry[]> {
+  const db = await getDb();
+  return db.getAllAsync<WeightEntry>('SELECT date, kg FROM weights WHERE date BETWEEN ? AND ? ORDER BY date', from, to);
+}
+
+export async function getAllWeights(): Promise<WeightEntry[]> {
+  const db = await getDb();
+  return db.getAllAsync<WeightEntry>('SELECT date, kg FROM weights ORDER BY date');
+}
+
+export async function getLatestWeight(): Promise<WeightEntry | null> {
+  const db = await getDb();
+  return db.getFirstAsync<WeightEntry>('SELECT date, kg FROM weights ORDER BY date DESC LIMIT 1');
+}
+
+export async function saveWeight(entry: WeightEntry): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    'INSERT INTO weights (date, kg, updated_at) VALUES (?, ?, ?) ON CONFLICT (date) DO UPDATE SET kg = excluded.kg, updated_at = excluded.updated_at',
+    entry.date, entry.kg, new Date().toISOString(),
+  );
+}
+
+export async function deleteWeight(date: string): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM weights WHERE date = ?', date);
 }

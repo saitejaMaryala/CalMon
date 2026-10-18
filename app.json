@@ -1,20 +1,20 @@
 {
   "expo": {
-    "name": "BentoMeter",
-    "slug": "bentometer",
-    "scheme": "bentometer",
+    "name": "CalMon",
+    "slug": "calmon",
+    "scheme": "calmon",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bentometer.app"
+      "bundleIdentifier": "com.calmon.app"
     },
     "android": {
-      "package": "com.bentometer.app",
+      "package": "com.calmon.app",
       "adaptiveIcon": {
-        "backgroundColor": "#FFD3E0",
+        "backgroundColor": "#E9E9FB",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -39,9 +39,9 @@
         {
           "image": "./assets/splash-icon.png",
           "imageWidth": 200,
-          "backgroundColor": "#FFF8F2",
+          "backgroundColor": "#F6F7F9",
           "dark": {
-            "backgroundColor": "#1C1A26"
+            "backgroundColor": "#0E1015"
           }
         }
       ],
@@ -51,23 +51,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "BentoMeter uses your photos so you can log meals you already snapped.",
-          "cameraPermission": "BentoMeter uses the camera to photograph your meals for calorie estimates.",
+          "photosPermission": "CalMon uses your photos so you can log meals you already snapped.",
+          "cameraPermission": "CalMon uses the camera to photograph your meals for calorie estimates.",
           "microphonePermission": false
-        }
-      ],
-      [
-        "llama.rn",
-        {
-          "enableOpenCLAndHexagon": false
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "extraProguardRules": "-keep class com.rnllama.** { *; }"
-          }
         }
       ]
     ]

@@ -6,72 +6,87 @@ export interface Palette {
   text: string;
   textSoft: string;
   textFaint: string;
-  sakura: string;
-  sakuraSoft: string;
-  matcha: string;
-  matchaSoft: string;
-  yuzu: string;
-  yuzuSoft: string;
-  sora: string;
-  soraSoft: string;
+  primary: string;
+  primarySoft: string;
+  green: string;
+  greenSoft: string;
+  amber: string;
+  amberSoft: string;
+  blue: string;
+  blueSoft: string;
   danger: string;
   onAccent: string;
   shadow: string;
   ringTrack: string;
+  /** Chart gridlines: one hairline step off the card surface. */
+  grid: string;
+  /** Meal series colors for charts (validated for color-blind separation in both modes). */
+  mealBreakfast: string;
+  mealLunch: string;
+  mealDinner: string;
+  mealSnacks: string;
 }
 
-/** Washi paper by day. */
 export const light: Palette = {
-  bg: '#FFF8F2',
-  bgSoft: '#FCEFE6',
+  bg: '#F6F7F9',
+  bgSoft: '#EEF0F4',
   card: '#FFFFFF',
-  border: '#F1E3DA',
-  text: '#3A3335',
-  textSoft: '#7A6E70',
-  textFaint: '#B4A8A6',
-  sakura: '#F09AB0',
-  sakuraSoft: '#FDE4EA',
-  matcha: '#8DBB8A',
-  matchaSoft: '#E5F1E2',
-  yuzu: '#F2C66D',
-  yuzuSoft: '#FDF1D6',
-  sora: '#8DB8E0',
-  soraSoft: '#E3EFFA',
-  danger: '#E07A7A',
+  border: '#E5E7EB',
+  text: '#111827',
+  textSoft: '#6B7280',
+  textFaint: '#9CA3AF',
+  primary: '#5B5BD6',
+  primarySoft: '#ECECFB',
+  green: '#22A55B',
+  greenSoft: '#E4F5EB',
+  amber: '#F2A516',
+  amberSoft: '#FDF2DC',
+  blue: '#1E9BD7',
+  blueSoft: '#E1F2FB',
+  danger: '#E5484D',
   onAccent: '#FFFFFF',
-  shadow: 'rgba(120, 80, 70, 0.10)',
-  ringTrack: '#F6E7E0',
+  shadow: 'rgba(17, 24, 39, 0.06)',
+  ringTrack: '#ECEEF2',
+  grid: '#EEF0F3',
+  mealBreakfast: '#EDA100',
+  mealLunch: '#2A78D6',
+  mealDinner: '#EB6834',
+  mealSnacks: '#1BAF7A',
 };
 
-/** Yoru (night) indigo. */
 export const dark: Palette = {
-  bg: '#1C1A26',
-  bgSoft: '#232031',
-  card: '#2A2738',
-  border: '#36324A',
-  text: '#F3EDE7',
-  textSoft: '#B9B0BE',
-  textFaint: '#7D7590',
-  sakura: '#F29BB2',
-  sakuraSoft: '#46303F',
-  matcha: '#8FBF8C',
-  matchaSoft: '#2C3B33',
-  yuzu: '#EBC46F',
-  yuzuSoft: '#433A2C',
-  sora: '#92B9E2',
-  soraSoft: '#2D3550',
-  danger: '#EB8C8C',
-  onAccent: '#1C1A26',
-  shadow: 'rgba(0, 0, 0, 0.35)',
-  ringTrack: '#36324A',
+  bg: '#0E1015',
+  bgSoft: '#171A21',
+  card: '#1A1D25',
+  border: '#272B35',
+  text: '#F3F4F6',
+  textSoft: '#A3A9B5',
+  textFaint: '#6B7280',
+  primary: '#8484F2',
+  primarySoft: '#25264A',
+  green: '#3CCB7F',
+  greenSoft: '#16302A',
+  amber: '#F5B83D',
+  amberSoft: '#382D15',
+  blue: '#45B5EA',
+  blueSoft: '#14303F',
+  danger: '#F2686C',
+  onAccent: '#0E1015',
+  shadow: 'rgba(0, 0, 0, 0.4)',
+  ringTrack: '#272B35',
+  grid: '#252935',
+  mealBreakfast: '#C98500',
+  mealLunch: '#3987E5',
+  mealDinner: '#D95926',
+  mealSnacks: '#199E70',
 };
 
 export const fonts = {
-  regular: 'MPLUSRounded1c_400Regular',
-  medium: 'MPLUSRounded1c_500Medium',
-  bold: 'MPLUSRounded1c_700Bold',
-  heavy: 'MPLUSRounded1c_800ExtraBold',
+  regular: 'Inter_400Regular',
+  medium: 'Inter_500Medium',
+  bold: 'Inter_600SemiBold',
+  heavy: 'Inter_700Bold',
 };
 
-export const radius = { sm: 12, md: 18, lg: 24, pill: 999 };
+export const radius = { sm: 10, md: 14, lg: 18, pill: 999 };
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };

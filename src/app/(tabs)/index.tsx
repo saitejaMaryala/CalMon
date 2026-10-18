@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import { BentoGrid } from '@/components/BentoGrid';
+import { MealGrid } from '@/components/MealGrid';
 import { CalorieRing } from '@/components/CalorieRing';
 import { MacroBars } from '@/components/MacroBars';
 import { Mascot, moodFor } from '@/components/Mascot';
@@ -40,10 +40,9 @@ export default function Today() {
     <Screen>
       <Row style={{ justifyContent: 'space-between' }}>
         <View style={{ flex: 1 }}>
-          <Txt variant="jp">{greeting.jp}</Txt>
+          <Txt variant="caption">{greeting}</Txt>
           <Txt variant="title">
-            {greeting.en}
-            {profile.name ? `, ${profile.name}` : ''}
+            {profile.name || 'Today'}
           </Txt>
         </View>
         <Mascot size={56} mood={moodFor(totals.kcal, targets.kcal)} />
@@ -82,7 +81,7 @@ export default function Today() {
         <CalorieRing consumed={totals.kcal} target={targets.kcal} size={150} />
         <View style={{ flex: 1, gap: 12 }}>
           <View>
-            <Txt variant="caption">Eaten · たべた</Txt>
+            <Txt variant="caption">Eaten</Txt>
             <Txt variant="number">
               {Math.round(totals.kcal).toLocaleString()}
               <Txt variant="caption"> / {targets.kcal.toLocaleString()}</Txt>
@@ -102,23 +101,20 @@ export default function Today() {
         <Button title="Add a meal to this day" icon={<Ionicons name="add" size={20} color={c.onAccent} />} onPress={() => log()} />
       )}
 
-      <BentoGrid meals={meals} onOpenMeal={(id) => router.push(`/meal/${id}`)} onLog={log} />
+      <MealGrid meals={meals} onOpenMeal={(id) => router.push(`/meal/${id}`)} onLog={log} />
 
       {isToday && rec ? <RecommendationCard rec={rec} /> : null}
 
       <View style={{ gap: 10 }}>
         <Row style={{ justifyContent: 'space-between' }}>
-          <View>
-            <Txt variant="h2">Meals</Txt>
-            <Txt variant="jp">きょうのごはん</Txt>
-          </View>
+          <Txt variant="h2">Meals</Txt>
           <Button small kind="soft" title="+ Add" onPress={() => log()} />
         </Row>
         {meals.length === 0 ? (
           <Card style={{ alignItems: 'center', gap: 8 }}>
             <Mascot size={56} mood="sleepy" />
             <Txt variant="body" soft style={{ textAlign: 'center' }}>
-              Nothing logged {isToday ? 'yet today' : 'on this day'}. Snap your first bite! 📸
+              Nothing logged {isToday ? 'yet today' : 'on this day'}. Snap a photo to log your first meal.
             </Txt>
           </Card>
         ) : (

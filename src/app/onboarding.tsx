@@ -26,15 +26,12 @@ export default function Onboarding() {
       {step === 0 && (
         <View style={{ alignItems: 'center', gap: 16, paddingTop: 60 }}>
           <Mascot size={140} mood="wink" bounce />
-          <Txt variant="display">BentoMeter</Txt>
-          <Txt variant="jp" style={{ fontSize: 14 }}>
-            べんとうメーター
-          </Txt>
+          <Txt variant="display">CalMon</Txt>
           <Txt variant="body" soft style={{ textAlign: 'center', paddingHorizontal: 16 }}>
-            Snap your meal, and I'll count the calories and suggest what to eat next. Let's set things up! 🍙
+            {"Snap your meal, and I'll count the calories and suggest what to eat next. Let's get you set up."}
           </Txt>
           <View style={{ height: 24 }} />
-          <Button title="Let's go ✨" onPress={() => setStep(1)} style={{ alignSelf: 'stretch' }} />
+          <Button title="Get started" onPress={() => setStep(1)} style={{ alignSelf: 'stretch' }} />
         </View>
       )}
 
@@ -42,7 +39,6 @@ export default function Onboarding() {
         <>
           <View>
             <Txt variant="title">About you</Txt>
-            <Txt variant="jp">あなたについて</Txt>
           </View>
           <Txt variant="body" soft>
             Used to work out your daily calorie target. You can change it any time.
@@ -65,10 +61,9 @@ export default function Onboarding() {
           </View>
           <View>
             <Txt variant="title">Connect Gemini</Txt>
-            <Txt variant="jp">AIとつなぐ</Txt>
           </View>
           <Txt variant="body" soft>
-            BentoMeter sends your meal photo to Google Gemini to recognise foods and estimate calories.
+            CalMon sends your meal photo to Google Gemini to recognise foods and estimate calories.
           </Txt>
           <ApiKeyForm
             initial={apiKey}
