@@ -3,7 +3,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { cleanupOldPhotosDaily } from '@/lib/photoCleanup';
 import { useAppStore } from '@/store/useAppStore';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 import { fonts } from '@/theme/tokens';
@@ -26,6 +28,18 @@ export default function RootLayout() {
       useAppStore.setState({ hydrated: true });
     });
   }, [hydrate]);
+
+  // Once a day (first launch, or first return to the app that day), delete photos older than a week.
+  useEffect(() => {
+    if (!hydrated) return;
+    const run = () =>
+      cleanupOldPhotosDaily()
+        .then((deleted) => deleted > 0 && useAppStore.getState().bumpData())
+        .catch((e) => console.warn('Photo cleanup failed', e));
+    run();
+    const sub = AppState.addEventListener('change', (state) => state === 'active' && run());
+    return () => sub.remove();
+  }, [hydrated]);
 
   const ready = (fontsLoaded || !!fontError) && hydrated;
   useEffect(() => {

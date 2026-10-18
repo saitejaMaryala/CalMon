@@ -40,3 +40,4 @@ yarn-error.*
 /ios
 /android
 /build-android.log
+/session.txt

@@ -332,3 +332,24 @@ export async function deleteWeight(date: string): Promise<void> {
   const db = await getDb();
   await db.runAsync('DELETE FROM weights WHERE date = ?', date);
 }
+
+// ---------- photo cleanup ----------
+
+/**
+ * Detach photos from meals dated before `cutoff` and return their URIs (to delete the files),
+ * along with the photo URIs still in use.
+ */
+export async function clearOldPhotos(cutoff: string): Promise<{ removed: string[]; kept: string[] }> {
+  const db = await getDb();
+  let removed: string[] = [];
+  await db.withExclusiveTransactionAsync(async (tx) => {
+    const rows = await tx.getAllAsync<{ photo_uri: string }>(
+      'SELECT photo_uri FROM meals WHERE photo_uri IS NOT NULL AND date < ?',
+      cutoff,
+    );
+    removed = rows.map((r) => r.photo_uri);
+    await tx.runAsync('UPDATE meals SET photo_uri = NULL WHERE photo_uri IS NOT NULL AND date < ?', cutoff);
+  });
+  const kept = await db.getAllAsync<{ photo_uri: string }>('SELECT photo_uri FROM meals WHERE photo_uri IS NOT NULL');
+  return { removed, kept: kept.map((r) => r.photo_uri) };
+}
