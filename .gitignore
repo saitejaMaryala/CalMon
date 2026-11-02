@@ -41,3 +41,6 @@ yarn-error.*
 /android
 /build-android.log
 /session.txt
+
+# Claude Code local settings
+/.claude/
