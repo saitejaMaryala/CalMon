@@ -30,16 +30,17 @@ export function success() {
 
 // ---------- text ----------
 
-type Variant = 'display' | 'title' | 'h2' | 'body' | 'bodyBold' | 'caption' | 'number';
+type Variant = 'display' | 'title' | 'h2' | 'body' | 'bodyBold' | 'caption' | 'number' | 'quote';
 
 const variantStyle: Record<Variant, TextStyle> = {
   display: { fontFamily: fonts.heavy, fontSize: 34, lineHeight: 42, letterSpacing: -0.8 },
   title: { fontFamily: fonts.heavy, fontSize: 26, lineHeight: 32, letterSpacing: -0.5 },
-  h2: { fontFamily: fonts.bold, fontSize: 17, lineHeight: 24 },
+  h2: { fontFamily: fonts.heading, fontSize: 17, lineHeight: 24, letterSpacing: -0.2 },
   body: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 22 },
   bodyBold: { fontFamily: fonts.bold, fontSize: 15, lineHeight: 22 },
   caption: { fontFamily: fonts.medium, fontSize: 12, lineHeight: 17 },
   number: { fontFamily: fonts.heavy, fontSize: 20, lineHeight: 26, letterSpacing: -0.3 },
+  quote: { fontFamily: fonts.quote, fontSize: 15, lineHeight: 23 },
 };
 
 export function Txt({
@@ -51,7 +52,7 @@ export function Txt({
   ...rest
 }: TextProps & { variant?: Variant; soft?: boolean; faint?: boolean; color?: string }) {
   const { c } = useTheme();
-  const tint = color ?? (faint ? c.textFaint : soft || variant === 'caption' ? c.textSoft : c.text);
+  const tint = color ?? (faint ? c.textFaint : soft || variant === 'caption' || variant === 'quote' ? c.textSoft : c.text);
   return <Text {...rest} style={[variantStyle[variant], { color: tint }, style]} />;
 }
 

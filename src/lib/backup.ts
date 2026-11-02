@@ -1,9 +1,9 @@
 import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import { getAllMeals, getAllWeights, getProfile, saveMeal, saveProfile, saveWeight } from './db';
+import { getAllMeals, getAllWeights, getAllWork, getProfile, saveMeal, saveProfile, saveWeight, saveWorkSession } from './db';
 import { todayKey } from './dates';
-import type { Meal, Profile, WeightEntry } from './types';
+import type { Meal, Profile, WeightEntry, WorkSession } from './types';
 
 interface BackupFile {
   app: 'calmon' | 'bentometer';
@@ -13,6 +13,8 @@ interface BackupFile {
   meals: Meal[];
   /** Added with the Stats tab; older backups don't have it. */
   weights?: WeightEntry[];
+  /** Added with work tracking. */
+  work?: WorkSession[];
 }
 
 /** Write all data to a JSON file and open the share sheet. Photos are not included. */
@@ -24,6 +26,7 @@ export async function exportBackup(): Promise<number> {
     profile: await getProfile(),
     meals: (await getAllMeals()).map((m) => ({ ...m, photoUri: null })),
     weights: await getAllWeights(),
+    work: await getAllWork(),
   };
   const file = new File(Paths.cache, `calmon-${todayKey()}.json`);
   file.create({ overwrite: true });
@@ -44,5 +47,6 @@ export async function importBackup(): Promise<number | null> {
   if (data.profile) await saveProfile(data.profile);
   for (const m of data.meals) await saveMeal({ ...m, photoUri: null });
   for (const w of data.weights ?? []) await saveWeight(w);
+  for (const w of data.work ?? []) await saveWorkSession(w);
   return data.meals.length;
 }

@@ -9,6 +9,7 @@ import { Button, Card, Chip, Input, Row, Screen, Segmented, success, Txt } from 
 import { exportBackup, importBackup } from '@/lib/backup';
 import { MODEL_CHOICES } from '@/lib/gemini';
 import { GOAL_META, targetsFor } from '@/lib/nutrition';
+import { formatMinutes } from '@/lib/work';
 import type { ThemePref } from '@/lib/types';
 import { useAppStore } from '@/store/useAppStore';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -27,7 +28,7 @@ export default function Settings() {
     try {
       const n = await exportBackup();
       success();
-      Alert.alert('Exported', `${n} meals saved to the backup file.`);
+      Alert.alert('Exported', `${n} meals and your work sessions saved to the backup file.`);
     } catch (e) {
       Alert.alert('Export failed', String(e));
     }
@@ -79,6 +80,36 @@ export default function Settings() {
           </Txt>
         </Card>
       </Pressable>
+
+      <Card style={{ gap: 10 }}>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <View style={{ flex: 1 }}>
+            <Txt variant="h2">Daily work goal</Txt>
+            <Txt variant="caption">Used by the Work ring, history and stats</Txt>
+          </View>
+          <Row gap={10}>
+            <Pressable
+              hitSlop={8}
+              disabled={s.workTargetMin <= 30}
+              onPress={() => s.setWorkTargetMin(Math.max(30, s.workTargetMin - 30))}
+              style={{ width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: c.bgSoft }}
+            >
+              <Ionicons name="remove" size={18} color={c.text} />
+            </Pressable>
+            <Txt variant="number" style={{ minWidth: 64, textAlign: 'center' }}>
+              {formatMinutes(s.workTargetMin)}
+            </Txt>
+            <Pressable
+              hitSlop={8}
+              disabled={s.workTargetMin >= 16 * 60}
+              onPress={() => s.setWorkTargetMin(Math.min(16 * 60, s.workTargetMin + 30))}
+              style={{ width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: c.primarySoft }}
+            >
+              <Ionicons name="add" size={18} color={c.text} />
+            </Pressable>
+          </Row>
+        </Row>
+      </Card>
 
       <Card style={{ gap: 12 }}>
         <Txt variant="h2">Gemini</Txt>

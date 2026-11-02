@@ -1,20 +1,34 @@
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { progressColors } from '@/lib/color';
 import { useTheme } from '@/theme/ThemeProvider';
 import { Txt } from './ui';
 
-export function CalorieRing({ consumed, target, size = 168 }: { consumed: number; target: number; size?: number }) {
+/**
+ * Ring that fills toward a target, shifting red → green on the way.
+ * With `overflow`, going past the target draws a red second lap (for limits like calories).
+ */
+export function ProgressRing({
+  value,
+  target,
+  size = 168,
+  overflow = false,
+  children,
+}: {
+  value: number;
+  target: number;
+  size?: number;
+  overflow?: boolean;
+  children: ReactNode;
+}) {
   const { c, isDark } = useTheme();
   const stroke = 14;
   const r = (size - stroke) / 2;
   const circ = 2 * Math.PI * r;
-  const ratio = consumed / Math.max(1, target);
-  const over = ratio > 1;
+  const ratio = value / Math.max(1, target);
   const main = Math.min(1, ratio);
-  const overflow = over ? Math.min(1, ratio - 1) : 0;
-  const left = Math.round(target - consumed);
-  // Red when nothing is eaten, shifting to green as you reach the target.
+  const extra = overflow && ratio > 1 ? Math.min(1, ratio - 1) : 0;
   const ring = progressColors(main, isDark);
 
   return (
@@ -33,7 +47,7 @@ export function CalorieRing({ consumed, target, size = 168 }: { consumed: number
             strokeDasharray={`${circ * main} ${circ}`}
           />
         )}
-        {overflow > 0 && (
+        {extra > 0 && (
           <Circle
             cx={size / 2}
             cy={size / 2}
@@ -42,14 +56,24 @@ export function CalorieRing({ consumed, target, size = 168 }: { consumed: number
             strokeWidth={stroke}
             fill="none"
             strokeLinecap="round"
-            strokeDasharray={`${circ * overflow} ${circ}`}
+            strokeDasharray={`${circ * extra} ${circ}`}
           />
         )}
       </Svg>
+      {children}
+    </View>
+  );
+}
+
+/** Calories left today; red → green as you approach the target, red lap when over. */
+export function CalorieRing({ consumed, target, size = 168 }: { consumed: number; target: number; size?: number }) {
+  const left = Math.round(target - consumed);
+  return (
+    <ProgressRing value={consumed} target={target} size={size} overflow>
       <Txt variant="display" style={{ fontSize: 32 }}>
         {Math.abs(left).toLocaleString()}
       </Txt>
       <Txt variant="caption">{left >= 0 ? 'kcal left' : 'kcal over'}</Txt>
-    </View>
+    </ProgressRing>
   );
 }

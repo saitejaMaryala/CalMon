@@ -86,12 +86,15 @@ export function weightChange(values: (number | null)[]): { first: number; last: 
   return { first, last, delta: Math.round((last - first) * 10) / 10 };
 }
 
-/** Evenly spaced "nice" axis ticks (steps of 1, 2, 2.5 or 5 × 10^n) covering [min, max]. */
-export function niceTicks(min: number, max: number, count = 4): number[] {
+/**
+ * Evenly spaced "nice" axis ticks covering [min, max]. Steps are `steps` × 10^n
+ * (default 1, 2, 2.5, 5); pass e.g. [1, 2, 4, 6] for hour axes.
+ */
+export function niceTicks(min: number, max: number, count = 4, steps = [1, 2, 2.5, 5]): number[] {
   if (max <= min) max = min + 1;
   const rough = (max - min) / Math.max(1, count - 1);
   const pow = 10 ** Math.floor(Math.log10(rough));
-  const step = [1, 2, 2.5, 5, 10].map((m) => m * pow).find((s) => s >= rough)!;
+  const step = [...steps, 10].map((m) => m * pow).find((s) => s >= rough)!;
   const lo = Math.floor(min / step) * step;
   const hi = Math.ceil(max / step) * step;
   const ticks: number[] = [];

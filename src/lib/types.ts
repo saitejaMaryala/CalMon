@@ -82,4 +82,25 @@ export interface WeightEntry {
   kg: number;
 }
 
+/** Which tracker the Today / History / Stats tabs show. */
+export type AppMode = 'food' | 'work';
+
+export type WorkCategory = 'academics' | 'research' | 'personal';
+
+/** A block of time spent working, logged by duration. */
+export interface WorkSession {
+  id: string;
+  /** Local calendar day, YYYY-MM-DD. */
+  date: string;
+  category: WorkCategory;
+  /** Short name for the session; empty for sessions logged before titles existed. */
+  title: string;
+  minutes: number;
+  /** ISO timestamp of when the session ended (or was logged). */
+  loggedAt: string;
+  note: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ThemePref = 'system' | 'light' | 'dark';

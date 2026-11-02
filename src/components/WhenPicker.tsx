@@ -18,14 +18,6 @@ export function WhenPicker({
   when: Date;
   onWhen: (d: Date) => void;
 }) {
-  const [mode, setMode] = useState<'date' | 'time' | null>(null);
-
-  const onChange = (e: DateTimePickerEvent, d?: Date) => {
-    if (Platform.OS === 'android') setMode(null);
-    if (e.type === 'set' && d) onWhen(d);
-    if (e.type === 'dismissed') setMode(null);
-  };
-
   return (
     <View style={{ gap: 10 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
@@ -38,6 +30,23 @@ export function WhenPicker({
           />
         ))}
       </ScrollView>
+      <DateTimeChips when={when} onWhen={onWhen} />
+    </View>
+  );
+}
+
+/** "When  [📅 Today] [🕐 14:30]" chips that open the native date / time pickers (no future dates). */
+export function DateTimeChips({ when, onWhen }: { when: Date; onWhen: (d: Date) => void }) {
+  const [mode, setMode] = useState<'date' | 'time' | null>(null);
+
+  const onChange = (e: DateTimePickerEvent, d?: Date) => {
+    if (Platform.OS === 'android') setMode(null);
+    if (e.type === 'set' && d) onWhen(d);
+    if (e.type === 'dismissed') setMode(null);
+  };
+
+  return (
+    <View style={{ gap: 10 }}>
       <Row>
         <Txt variant="caption">When</Txt>
         <Chip label={`📅 ${formatDayLabel(dayKey(when))}`} onPress={() => setMode(mode === 'date' ? null : 'date')} />

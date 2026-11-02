@@ -3,7 +3,8 @@ import * as db from '@/lib/db';
 import { todayKey } from '@/lib/dates';
 import { DEFAULT_MODEL } from '@/lib/gemini';
 import { getApiKey, setApiKey } from '@/lib/secrets';
-import type { FoodItem, Profile, Recommendation, Slot, ThemePref } from '@/lib/types';
+import type { AppMode, FoodItem, Profile, Recommendation, Slot, ThemePref } from '@/lib/types';
+import { DEFAULT_WORK_TARGET_MIN } from '@/lib/work';
 
 /** A meal being reviewed/edited before it is saved. */
 export interface Draft {
@@ -30,6 +31,10 @@ interface AppState {
   modelId: string;
   useFallback: boolean;
   apiKey: string | null;
+  /** Whether Today / History / Stats show food or work tracking. */
+  mode: AppMode;
+  /** Daily work goal in minutes. */
+  workTargetMin: number;
   /** Day shown on the Today tab. */
   selectedDate: string;
   /** Bumped after every meal write so screens reload. */
@@ -42,6 +47,8 @@ interface AppState {
   setModelId: (m: string) => Promise<void>;
   setUseFallback: (v: boolean) => Promise<void>;
   setApiKey: (k: string) => Promise<void>;
+  setMode: (m: AppMode) => Promise<void>;
+  setWorkTargetMin: (m: number) => Promise<void>;
   setSelectedDate: (d: string) => void;
   bumpData: () => void;
   setDraft: (d: Draft | null) => void;
@@ -55,17 +62,21 @@ export const useAppStore = create<AppState>((set, get) => ({
   modelId: DEFAULT_MODEL,
   useFallback: true,
   apiKey: null,
+  mode: 'food',
+  workTargetMin: DEFAULT_WORK_TARGET_MIN,
   selectedDate: todayKey(),
   dataVersion: 0,
   draft: null,
 
   hydrate: async () => {
-    const [profile, themePref, modelId, useFallback, apiKey] = await Promise.all([
+    const [profile, themePref, modelId, useFallback, apiKey, mode, workTarget] = await Promise.all([
       db.getProfile(),
       db.getSetting('theme'),
       db.getSetting('model'),
       db.getSetting('fallback'),
       getApiKey().catch(() => null),
+      db.getSetting('mode'),
+      db.getSetting('work_target_min'),
     ]);
     set({
       hydrated: true,
@@ -74,6 +85,8 @@ export const useAppStore = create<AppState>((set, get) => ({
       modelId: modelId ?? DEFAULT_MODEL,
       useFallback: useFallback !== 'false',
       apiKey,
+      mode: mode === 'work' ? 'work' : 'food',
+      workTargetMin: Number(workTarget) > 0 ? Number(workTarget) : DEFAULT_WORK_TARGET_MIN,
     });
   },
   setProfile: async (p) => {
@@ -95,6 +108,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   setApiKey: async (k) => {
     await setApiKey(k);
     set({ apiKey: k.trim() || null });
+  },
+  setMode: async (m) => {
+    set({ mode: m });
+    await db.setSetting('mode', m);
+  },
+  setWorkTargetMin: async (m) => {
+    set({ workTargetMin: m });
+    await db.setSetting('work_target_min', String(m));
   },
   setSelectedDate: (d) => set({ selectedDate: d }),
   bumpData: () => set({ dataVersion: get().dataVersion + 1 }),

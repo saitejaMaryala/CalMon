@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { MealGrid } from '@/components/MealGrid';
+import { ModeSwitch } from '@/components/ModeSwitch';
+import { WorkToday } from '@/components/work/WorkToday';
 import { CalorieRing } from '@/components/CalorieRing';
 import { MacroBars } from '@/components/MacroBars';
 import { Mascot, moodFor } from '@/components/Mascot';
@@ -17,6 +19,11 @@ import { useAppStore } from '@/store/useAppStore';
 import { useTheme } from '@/theme/ThemeProvider';
 
 export default function Today() {
+  const mode = useAppStore((s) => s.mode);
+  return mode === 'work' ? <WorkToday /> : <FoodToday />;
+}
+
+function FoodToday() {
   const { c } = useTheme();
   const profile = useAppStore((s) => s.profile)!;
   const date = useAppStore((s) => s.selectedDate);
@@ -47,6 +54,8 @@ export default function Today() {
         </View>
         <Mascot size={56} mood={moodFor(totals.kcal, targets.kcal)} />
       </Row>
+
+      <ModeSwitch />
 
       <Row style={{ justifyContent: 'space-between' }}>
         <Pressable

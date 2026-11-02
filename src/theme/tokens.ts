@@ -25,6 +25,10 @@ export interface Palette {
   mealLunch: string;
   mealDinner: string;
   mealSnacks: string;
+  /** Work category colors (validated together for color-blind separation in both modes). */
+  workAcademics: string;
+  workResearch: string;
+  workPersonal: string;
 }
 
 export const light: Palette = {
@@ -52,6 +56,9 @@ export const light: Palette = {
   mealLunch: '#2A78D6',
   mealDinner: '#EB6834',
   mealSnacks: '#1BAF7A',
+  workAcademics: '#2A78D6',
+  workResearch: '#EB6834',
+  workPersonal: '#6250D6',
 };
 
 export const dark: Palette = {
@@ -79,13 +86,26 @@ export const dark: Palette = {
   mealLunch: '#3987E5',
   mealDinner: '#D95926',
   mealSnacks: '#199E70',
+  workAcademics: '#3987E5',
+  workResearch: '#D95926',
+  workPersonal: '#9085E9',
 };
 
+/** Work mode swaps the indigo accent for teal so the switch is obvious at a glance. */
+export const workAccent = {
+  light: { primary: '#0E7C86', primarySoft: '#DDF1F0' },
+  dark: { primary: '#3CC4C0', primarySoft: '#123534' },
+};
+
+/** Plus Jakarta Sans for headings and big numbers, Inter for body text. */
 export const fonts = {
   regular: 'Inter_400Regular',
   medium: 'Inter_500Medium',
   bold: 'Inter_600SemiBold',
-  heavy: 'Inter_700Bold',
+  heading: 'PlusJakartaSans_700Bold',
+  heavy: 'PlusJakartaSans_800ExtraBold',
+  /** Light italic for notes and quoted descriptions. */
+  quote: 'Inter_300Light_Italic',
 };
 
 export const radius = { sm: 10, md: 14, lg: 18, pill: 999 };

@@ -4,9 +4,9 @@
 
 # CalMon
 
-**Snap your meal, get the calories, and know what to eat next.**
-<br/>A minimal daily calorie tracker for Android and iOS, powered by Gemini.
-<br/>Rate-limited? Hand it to your Gemini/ChatGPT app instead.
+**Track what you eat and how long you work, in one small app.**
+<br/>Snap a meal and Gemini counts the calories. Log study and research time against a daily goal.
+<br/>Everything stays on your phone.
 
 ![Expo SDK 57](https://img.shields.io/badge/Expo-SDK%2057-5B5BD6?style=flat-square&logo=expo&logoColor=white)
 ![React Native](https://img.shields.io/badge/React%20Native-0.86-1E9BD7?style=flat-square&logo=react&logoColor=white)
@@ -19,29 +19,100 @@
 
 ## What is this?
 
-CalMon is a pocket-sized calorie tracker that doesn't make you type every ingredient.
+CalMon has two modes, switched with the **Food / Work** toggle at the top of the main screens:
 
-Take a photo of your plate and one Gemini request does two things:
+- **Food** tracks calories. Take a photo of your plate and one Gemini request lists every food with its portion, calories, and macros, and suggests what to eat next. Log your weight and watch both trends in Stats.
+- **Work** tracks your time. Log sessions of **Academics**, **Research**, or **Personal Projects** against a daily goal (8 hours by default) and see your hours, streaks, and category split.
 
-1. **Works out what's on it.** Each food is listed separately with its portion, calories, and macros.
-2. **Suggests your next meal.** It looks at what you've already eaten today and suggests what to eat next, when, and roughly how many calories.
-
-Everything else stays **on your phone**: meals, photos, profile, and API key. No accounts, no servers, no tracking.
+Everything stays **on your phone**: meals, work sessions, photos, profile, and API key. No accounts, no servers, no tracking.
 
 When the free Gemini API says *"429: quota exceeded"*, you're still not stuck: **[ask a chat app](#ask-a-chat-app)**. CalMon writes the prompt, you send it to the Gemini or ChatGPT app you already have, and the answer is imported straight back.
 
-Meet **Mon**, the little calorie monster whose face follows your day: sleepy before your first meal, happy as you go, and dizzy if you overshoot.
+Meet **Mon**, the little monster whose face follows your day: sleepy before you start, happy as you go, and dizzy if you overshoot your calories. Mon turns teal in Work mode.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/food-today.png" width="200" /><br/><sub><b>Food: today</b></sub></td>
+    <td align="center"><img src="docs/screenshots/work-today.png" width="200" /><br/><sub><b>Work: today</b></sub></td>
+    <td align="center"><img src="docs/screenshots/dark-food.png" width="200" /><br/><sub><b>Dark mode</b></sub></td>
+    <td align="center"><img src="docs/screenshots/dark-work.png" width="200" /><br/><sub><b>Dark mode, Work</b></sub></td>
+  </tr>
+</table>
 
 ---
 
-## How it works
+## Food tracking
+
+### Your day
+
+The ring shows the calories left today and shifts from red to green as you get closer to your target, with bars for protein, carbs, and fat. Each meal fills its own tile. Tap a meal to see the full breakdown; notes you added show as a quiet italic quote.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/food-today.png" width="200" /><br/><sub><b>Today</b></sub></td>
+    <td align="center"><img src="docs/screenshots/food-log.png" width="200" /><br/><sub><b>Log a meal</b></sub></td>
+    <td align="center"><img src="docs/screenshots/meal-detail.png" width="200" /><br/><sub><b>Meal details</b></sub></td>
+  </tr>
+</table>
 
 1. **First launch.** Enter your body stats and CalMon calculates a daily calorie target with the Mifflin-St Jeor formula (or set your own number). Then paste a Gemini API key.
-2. **Log a meal.** The meal slot is picked from the clock (breakfast, lunch, snack, dinner, late snack). Take a photo or pick one from your gallery, optionally add a note like *"ate half the rice"*, and tap **Analyze**.
+2. **Log a meal.** The meal slot is picked from the clock (breakfast, lunch, snack, dinner, late snack). Take a photo, pick one from your gallery, or describe the meal in words. Add a note like *"ate half the rice"* and tap **Analyze**.
 3. **Review and save.** Every item comes back with portion, kcal, and macros. Tap **+ / −** to change quantities and the numbers rescale on-device. Rename items, change units, fix kcal, add or remove items. Below that is a **Next up** suggestion.
-4. **Your day.** The calorie ring shows how much is left today, with macro bars for protein, carbs, and fat. Each meal fills its own tile with its photo. Tap a meal to see the full breakdown, edit it, or delete it.
-5. **Stats.** Log your weight for any day (skip days whenever you like; they show as gaps). See a weight line chart and a daily calorie chart over 7, 30, or 90 days. Filter calories by breakfast, lunch, dinner, or snacks, or see them all stacked against your target. Tap a day for details.
-6. **History and settings.** Look back at the last 7 days and the month calendar, where each day gets a dot: amber for under, green for on target, red for over. In Settings you can switch between light and dark mode, change your profile, pick a Gemini model, and back up your data.
+
+### Stats and history
+
+Log your weight for any day; skipped days show as gaps in the line instead of being joined up. The calorie chart stacks breakfast, lunch, dinner, and snacks against your target, or shows one meal at a time, with daily averages per meal underneath. History has a 7-day chart and a month calendar with a dot per day: amber for under, green for on target, red for over.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/food-stats.png" width="200" /><br/><sub><b>Weight</b></sub></td>
+    <td align="center"><img src="docs/screenshots/food-stats-calories.png" width="200" /><br/><sub><b>Calories by meal</b></sub></td>
+    <td align="center"><img src="docs/screenshots/food-history.png" width="200" /><br/><sub><b>History</b></sub></td>
+  </tr>
+</table>
+
+---
+
+## Work tracking
+
+Flip the **Food / Work** switch and the app turns teal and tracks your work time instead.
+
+### Today and filtering
+
+A ring fills toward your daily goal, with a bar per category. Tap **Academics**, **Research**, or **Personal** in that breakdown (or the chips above the list) to show only that category's sessions; tap again to see everything. While filtered, **Log work** starts in that category.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/work-today.png" width="200" /><br/><sub><b>Today</b></sub></td>
+    <td align="center"><img src="docs/screenshots/work-filter.png" width="200" /><br/><sub><b>Filtered to Academics</b></sub></td>
+    <td align="center"><img src="docs/screenshots/work-session.png" width="200" /><br/><sub><b>Session details</b></sub></td>
+  </tr>
+</table>
+
+### Logging a session
+
+Give it a title, pick a category, and spin the wheels to set how long: hours go 0 to 12 and minutes 00 to 59, and both wrap around. Quick picks (30m, 1h, 1h 30m, 2h, 3h, 4h) set the wheels for you. Adjust the date and time if you're logging an earlier session, and add an optional description.
+
+| Category | Icon | For |
+|---|---|---|
+| Academics | 📖 book | Classes, coursework, exams |
+| Research | 🧪 flask | Papers, experiments, analysis |
+| Personal Projects | 🚀 rocket | Side projects and self-learning |
+
+Tap a session to see everything about it (title, category, duration, the time span you worked, and the description), then **Edit session** to change it or delete it.
+
+### History and stats
+
+History shows the last 7 days against your goal and a calendar where days that hit the goal get a green dot. Stats has tiles for total time, daily average, goal days, and current streak, a chart of hours per day stacked by category with the goal line, and each category's daily average and share.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/work-log.png" width="200" /><br/><sub><b>Log work</b></sub></td>
+    <td align="center"><img src="docs/screenshots/work-history.png" width="200" /><br/><sub><b>History</b></sub></td>
+    <td align="center"><img src="docs/screenshots/work-stats.png" width="200" /><br/><sub><b>Stats</b></sub></td>
+    <td align="center"><img src="docs/screenshots/settings.png" width="200" /><br/><sub><b>Settings</b></sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -63,8 +134,10 @@ Meet **Mon**, the little calorie monster whose face follows your day: sleepy bef
 | Personal targets | BMR/TDEE with Mifflin-St Jeor plus activity level and goal (lose / maintain / gain), or your own number |
 | Gemini model picker | With automatic fallback, see [Gemini models](#gemini-models) |
 | Ask a chat app | Gemini API rate-limited? Share the prompt and photo to the Gemini / ChatGPT app and paste the reply back |
-| Themes | Light, Dark, or Auto (follows the system) |
-| Backup | JSON export and import of meals, weights, and profile (photos not included) |
+| Work tracking | Food / Work switch, daily hours goal, titled sessions by category (Academics, Research, Personal Projects), scroll-wheel duration picker, filter by category, session details, history and stats |
+| Photo cleanup | Photos of meals older than a week are deleted once a day to save space; the meals and their data stay |
+| Themes | Light, Dark, or Auto (follows the system); teal accent in Work mode. Plus Jakarta Sans headings with Inter body text |
+| Backup | JSON export and import of meals, weights, work sessions, and profile (photos not included) |
 | Private by design | SQLite on-device, API key in the secure store (`expo-secure-store`), never in the source |
 
 ---
@@ -112,7 +185,11 @@ Your key is stored only on the device (secure store). It's never committed or se
 CalMon uses Continuous Native Generation, so the `android/` and `ios/` folders are generated and you never edit them by hand.
 
 ```bash
-# Local build on a connected Android device / emulator (needs Android Studio + JDK 17+)
+# One command: checks tools, disk and network, then builds the APK (needs the Android SDK + JDK 17+)
+./scripts/build-android.sh release            # standalone APK at android/app/build/outputs/apk/release/
+./scripts/build-android.sh debug --install    # dev build, installed on a connected phone or emulator
+
+# Or with Expo directly
 npx expo run:android --variant release
 
 # Or build in the cloud with EAS (no local Android Studio / Xcode needed)
@@ -159,6 +236,8 @@ The import tolerates messy replies: code fences, chatty text around the JSON, sm
 | `src/lib/handoff.ts` | Chat-app prompt + tolerant paste-back parser |
 | `scripts/build-android.sh` | One-command Android build (checks tools, disk and network, then builds the APK) |
 | `src/lib/db.ts` | SQLite schema + queries (profile, settings, meals, food_items, weights) |
+| `src/lib/work.ts`, `src/components/work/`, `src/app/work/` | Work categories, duration formatting, per-day totals and streaks; Work Today, Stats, the session details screen (`[id].tsx`) and the log / edit screen (`log.tsx`) |
+| `src/components/WheelPicker.tsx`, `ModeSwitch.tsx` | Looping hour / minute scroll wheels; the Food / Work toggle |
 | `src/lib/stats.ts`, `src/components/charts/` | Stats calculations (day ranges, per-meal totals, weight gaps, axis ticks) and the SVG weight / calorie charts |
 | `src/lib/mealSlot.ts`, `nutrition.ts` | Time → meal slot, BMR/TDEE/targets, per-unit scaling |
 | `src/lib/backup.ts` | JSON export / import |

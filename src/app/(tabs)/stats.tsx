@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Keyboard, Pressable, ScrollView, View } from 'react-native';
 import { CalorieChart, mealColor, type CalorieFilter } from '@/components/charts/CalorieChart';
 import { WeightChart } from '@/components/charts/WeightChart';
+import { ModeSwitch } from '@/components/ModeSwitch';
+import { WorkStats } from '@/components/work/WorkStats';
 import { Button, Card, Chip, Divider, Input, Row, Screen, Segmented, success, tap, Txt } from '@/components/ui';
 import { addDays, formatDayLabel, todayKey } from '@/lib/dates';
 import { deleteWeight, getDailyKcalBySlot, getLatestWeight, getWeights, saveWeight } from '@/lib/db';
@@ -24,6 +26,11 @@ import { useTheme } from '@/theme/ThemeProvider';
 type Range = '7' | '30' | '90';
 
 export default function Stats() {
+  const mode = useAppStore((s) => s.mode);
+  return mode === 'work' ? <WorkStats /> : <FoodStats />;
+}
+
+function FoodStats() {
   const { c } = useTheme();
   const profile = useAppStore((s) => s.profile)!;
   const setProfile = useAppStore((s) => s.setProfile);
@@ -61,6 +68,7 @@ export default function Stats() {
   return (
     <Screen>
       <Txt variant="title">Stats</Txt>
+      <ModeSwitch />
 
       <Segmented<Range>
         value={range}

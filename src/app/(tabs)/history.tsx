@@ -2,10 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { ModeSwitch } from '@/components/ModeSwitch';
 import { Card, Row, Screen, tap, Txt } from '@/components/ui';
 import { dayKey, parseDayKey, todayKey } from '@/lib/dates';
-import { getDailyKcal } from '@/lib/db';
+import { getDailyKcal, getDailyWorkByCategory } from '@/lib/db';
 import { targetsFor } from '@/lib/nutrition';
+import { formatMinutes } from '@/lib/work';
 import { useAppStore } from '@/store/useAppStore';
 import { useTheme } from '@/theme/ThemeProvider';
 import { fonts } from '@/theme/tokens';
@@ -19,7 +21,23 @@ export default function History() {
   const profile = useAppStore((s) => s.profile)!;
   const version = useAppStore((s) => s.dataVersion);
   const setSelectedDate = useAppStore((s) => s.setSelectedDate);
-  const target = targetsFor(profile).kcal;
+  const mode = useAppStore((s) => s.mode);
+  const workTarget = useAppStore((s) => s.workTargetMin);
+  const isWork = mode === 'work';
+  const target = isWork ? workTarget : targetsFor(profile).kcal;
+  const fmt = (v: number) => (isWork ? formatMinutes(v) : `${Math.round(v).toLocaleString()} kcal`);
+
+  /** Calories per day for food, minutes worked per day for work. */
+  const loadDaily = useCallback(
+    async (from: string, to: string): Promise<Record<string, number>> => {
+      if (!isWork) return getDailyKcal(from, to);
+      const rows = await getDailyWorkByCategory(from, to);
+      const out: Record<string, number> = {};
+      for (const r of rows) out[r.date] = (out[r.date] ?? 0) + r.minutes;
+      return out;
+    },
+    [isWork],
+  );
 
   const [month, setMonth] = useState(() => {
     const d = new Date();
@@ -33,14 +51,14 @@ export default function History() {
 
   useFocusEffect(
     useCallback(() => {
-      getDailyKcal(first, last).then(setKcalByDay);
+      loadDaily(first, last).then(setKcalByDay);
       const days = Array.from({ length: 7 }, (_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - (6 - i));
         return dayKey(d);
       });
-      getDailyKcal(days[0], days[6]).then((map) => setWeek(days.map((key) => ({ key, kcal: map[key] ?? 0 }))));
-    }, [first, last, version]),
+      loadDaily(days[0], days[6]).then((map) => setWeek(days.map((key) => ({ key, kcal: map[key] ?? 0 }))));
+    }, [first, last, version, loadDaily]),
   );
 
   const logged = week.filter((d) => d.kcal > 0);
@@ -62,12 +80,19 @@ export default function History() {
     router.navigate('/');
   };
 
-  const dotColor = (kcal: number) => {
-    if (kcal <= 0) return 'transparent';
-    const r = kcal / target;
+  const dotColor = (v: number) => {
+    if (v <= 0) return 'transparent';
+    const r = v / target;
+    // Work has no upper limit: reaching the goal is green, anything less is amber.
+    if (isWork) return r >= 1 ? c.green : c.amber;
     if (r > 1.1) return c.danger;
     if (r >= 0.85) return c.green;
     return c.amber;
+  };
+  const barColor = (v: number) => {
+    if (v <= 0) return c.ringTrack;
+    if (isWork) return v >= target ? c.green : c.primary;
+    return v > target * 1.1 ? c.danger : c.primary;
   };
 
   return (
@@ -76,10 +101,12 @@ export default function History() {
         <Txt variant="title">History</Txt>
       </View>
 
+      <ModeSwitch />
+
       <Card style={{ gap: 14 }}>
         <Row style={{ justifyContent: 'space-between' }}>
           <Txt variant="h2">Last 7 days</Txt>
-          <Txt variant="caption">avg {avg.toLocaleString()} kcal</Txt>
+          <Txt variant="caption">avg {fmt(avg)}</Txt>
         </Row>
         <View style={styles.chart}>
           <View
@@ -94,7 +121,7 @@ export default function History() {
                     width: 18,
                     height: `${Math.max(2, (d.kcal / maxBar) * 100)}%`,
                     borderRadius: 9,
-                    backgroundColor: d.kcal > target * 1.1 ? c.danger : d.kcal > 0 ? c.primary : c.ringTrack,
+                    backgroundColor: barColor(d.kcal),
                   }}
                 />
               </View>
@@ -108,7 +135,7 @@ export default function History() {
           ))}
         </View>
         <Txt variant="caption" faint>
-          Dashed line = your {target.toLocaleString()} kcal target
+          Dashed line = your {fmt(target)} {isWork ? 'daily goal' : 'target'}
         </Txt>
       </Card>
 
@@ -153,9 +180,18 @@ export default function History() {
           })}
         </View>
         <Row gap={14} style={{ justifyContent: 'center' }}>
-          <Legend color={c.amber} label="under" />
-          <Legend color={c.green} label="on target" />
-          <Legend color={c.danger} label="over" />
+          {isWork ? (
+            <>
+              <Legend color={c.amber} label="some work" />
+              <Legend color={c.green} label="goal reached" />
+            </>
+          ) : (
+            <>
+              <Legend color={c.amber} label="under" />
+              <Legend color={c.green} label="on target" />
+              <Legend color={c.danger} label="over" />
+            </>
+          )}
         </Row>
       </Card>
     </Screen>

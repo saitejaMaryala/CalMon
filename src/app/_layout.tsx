@@ -1,4 +1,5 @@
-import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, useFonts } from '@expo-google-fonts/inter';
+import { Inter_300Light_Italic, Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import { PlusJakartaSans_700Bold, PlusJakartaSans_800ExtraBold, useFonts } from '@expo-google-fonts/plus-jakarta-sans';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -14,10 +15,12 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
+    Inter_300Light_Italic,
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
-    Inter_700Bold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
   });
   const hydrated = useAppStore((s) => s.hydrated);
   const hydrate = useAppStore((s) => s.hydrate);
@@ -67,7 +70,7 @@ function AppStack() {
           headerShadowVisible: false,
           headerStyle: { backgroundColor: c.bg },
           headerTintColor: c.text,
-          headerTitleStyle: { fontFamily: fonts.bold, color: c.text },
+          headerTitleStyle: { fontFamily: fonts.heading, color: c.text },
           contentStyle: { backgroundColor: c.bg },
           headerBackButtonDisplayMode: 'minimal',
         }}
@@ -79,6 +82,8 @@ function AppStack() {
         <Stack.Screen name="review" options={{ title: 'Review' }} />
         <Stack.Screen name="meal/[id]" options={{ title: 'Meal' }} />
         <Stack.Screen name="profile" options={{ title: 'Profile & goal' }} />
+        <Stack.Screen name="work/log" options={{ title: 'Log work', presentation: 'modal' }} />
+        <Stack.Screen name="work/[id]" options={{ title: 'Session' }} />
       </Stack>
     </>
   );

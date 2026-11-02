@@ -121,10 +121,12 @@ export default function MealDetail() {
       </Card>
 
       {meal.note ? (
-        <Card tint={c.amberSoft} style={{ borderColor: c.amberSoft }}>
-          <Txt variant="caption">Note</Txt>
-          <Txt variant="body">{meal.note}</Txt>
-        </Card>
+        <View style={{ borderLeftWidth: 3, borderLeftColor: c.primarySoft, paddingLeft: 14, paddingVertical: 2, gap: 2 }}>
+          <Txt variant="caption" faint>
+            Note
+          </Txt>
+          <Txt variant="quote">{meal.note}</Txt>
+        </View>
       ) : null}
 
       {meal.recommendation ? <RecommendationCard rec={meal.recommendation} /> : null}

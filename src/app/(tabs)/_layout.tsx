@@ -7,6 +7,7 @@ import { fonts } from '@/theme/tokens';
 export default function TabsLayout() {
   const { c } = useTheme();
   const profile = useAppStore((s) => s.profile);
+  const mode = useAppStore((s) => s.mode);
   if (!profile) return <Redirect href="/onboarding" />;
 
   return (
@@ -24,7 +25,10 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Today',
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? 'restaurant' : 'restaurant-outline'} size={22} color={color} />,
+          tabBarIcon: ({ color, focused }) => {
+            const icon = mode === 'work' ? 'briefcase' : 'restaurant';
+            return <Ionicons name={focused ? icon : `${icon}-outline`} size={22} color={color} />;
+          },
         }}
       />
       <Tabs.Screen

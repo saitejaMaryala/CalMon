@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
-import type { FoodItem, Meal, Profile, Recommendation, Slot, WeightEntry } from './types';
+import type { FoodItem, Meal, Profile, Recommendation, Slot, WeightEntry, WorkCategory, WorkSession } from './types';
 
-const DATABASE_VERSION = 2;
+const DATABASE_VERSION = 4;
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
@@ -80,6 +80,26 @@ CREATE TABLE IF NOT EXISTS weights (
 );
 `);
     version = 2;
+  }
+  if (version === 2) {
+    await db.execAsync(`
+CREATE TABLE IF NOT EXISTS work_sessions (
+  id TEXT PRIMARY KEY NOT NULL,
+  date TEXT NOT NULL,
+  category TEXT NOT NULL,
+  minutes INTEGER NOT NULL,
+  logged_at TEXT NOT NULL,
+  note TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS work_sessions_date ON work_sessions (date, logged_at);
+`);
+    version = 3;
+  }
+  if (version === 3) {
+    await db.execAsync(`ALTER TABLE work_sessions ADD COLUMN title TEXT NOT NULL DEFAULT '';`);
+    version = 4;
   }
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
@@ -352,4 +372,78 @@ export async function clearOldPhotos(cutoff: string): Promise<{ removed: string[
   });
   const kept = await db.getAllAsync<{ photo_uri: string }>('SELECT photo_uri FROM meals WHERE photo_uri IS NOT NULL');
   return { removed, kept: kept.map((r) => r.photo_uri) };
+}
+
+// ---------- work ----------
+
+interface WorkRow {
+  id: string;
+  date: string;
+  category: WorkCategory;
+  title: string;
+  minutes: number;
+  logged_at: string;
+  note: string;
+  created_at: string;
+  updated_at: string;
+}
+
+function toWork(r: WorkRow): WorkSession {
+  return {
+    id: r.id,
+    date: r.date,
+    category: r.category,
+    title: r.title ?? '',
+    minutes: r.minutes,
+    loggedAt: r.logged_at,
+    note: r.note,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  };
+}
+
+export async function getWorkForDate(date: string): Promise<WorkSession[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<WorkRow>('SELECT * FROM work_sessions WHERE date = ? ORDER BY logged_at', date);
+  return rows.map(toWork);
+}
+
+export async function getWorkSession(id: string): Promise<WorkSession | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<WorkRow>('SELECT * FROM work_sessions WHERE id = ?', id);
+  return row ? toWork(row) : null;
+}
+
+export async function getAllWork(): Promise<WorkSession[]> {
+  const db = await getDb();
+  return (await db.getAllAsync<WorkRow>('SELECT * FROM work_sessions ORDER BY date, logged_at')).map(toWork);
+}
+
+export async function saveWorkSession(w: WorkSession): Promise<void> {
+  const db = await getDb();
+  await db.runAsync(
+    `INSERT INTO work_sessions (id, date, category, title, minutes, logged_at, note, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT (id) DO UPDATE SET date = excluded.date, category = excluded.category, title = excluded.title,
+       minutes = excluded.minutes, logged_at = excluded.logged_at, note = excluded.note, updated_at = excluded.updated_at`,
+    w.id, w.date, w.category, w.title ?? '', w.minutes, w.loggedAt, w.note, w.createdAt, w.updatedAt,
+  );
+}
+
+export async function deleteWorkSession(id: string): Promise<void> {
+  const db = await getDb();
+  await db.runAsync('DELETE FROM work_sessions WHERE id = ?', id);
+}
+
+/** Minutes per day and category between two day keys (inclusive). */
+export async function getDailyWorkByCategory(
+  from: string,
+  to: string,
+): Promise<{ date: string; category: WorkCategory; minutes: number }[]> {
+  const db = await getDb();
+  return db.getAllAsync<{ date: string; category: WorkCategory; minutes: number }>(
+    `SELECT date, category, SUM(minutes) AS minutes FROM work_sessions
+     WHERE date BETWEEN ? AND ? GROUP BY date, category`,
+    from, to,
+  );
 }
