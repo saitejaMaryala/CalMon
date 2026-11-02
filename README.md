@@ -45,7 +45,7 @@ Meet **Mon**, the little monster whose face follows your day: sleepy before you 
 
 ### Your day
 
-The ring shows the calories left today and shifts from red to green as you get closer to your target, with bars for protein, carbs, and fat. Each meal fills its own tile. Tap a meal to see the full breakdown; notes you added show as a quiet italic quote.
+The ring shows the calories left today and shifts from red to green as you get closer to your target, with bars for protein, carbs, and fat. Each meal fills its own tile. Tap a meal to see the full breakdown, with the meal's description (from Gemini, the chat app, or what you typed) in thin italics under the photo.
 
 <table>
   <tr>

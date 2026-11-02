@@ -87,7 +87,9 @@ export default function MealDetail() {
         <Txt variant="caption">
           {formatDayLabel(meal.date)} · {formatTime(eaten)}
         </Txt>
-        <Txt variant="title">{meal.dishSummary || 'Meal'}</Txt>
+        <Txt variant="quote" style={{ fontSize: 22, lineHeight: 30, color: c.text }}>
+          {meal.dishSummary || 'Meal'}
+        </Txt>
       </View>
 
       <Card style={{ gap: 4 }}>
@@ -119,15 +121,6 @@ export default function MealDetail() {
           );
         })}
       </Card>
-
-      {meal.note ? (
-        <View style={{ borderLeftWidth: 3, borderLeftColor: c.primarySoft, paddingLeft: 14, paddingVertical: 2, gap: 2 }}>
-          <Txt variant="caption" faint>
-            Note
-          </Txt>
-          <Txt variant="quote">{meal.note}</Txt>
-        </View>
-      ) : null}
 
       {meal.recommendation ? <RecommendationCard rec={meal.recommendation} /> : null}
 
