@@ -2,7 +2,7 @@
 
 <img src="assets/icon.png" width="128" alt="CalMon mascot" />
 
-# CalMon
+# CalMon APK
 
 **Track what you eat and how long you work, in one small app.**
 <br/>Snap a meal and Gemini counts the calories. Log study and research time against a daily goal.
